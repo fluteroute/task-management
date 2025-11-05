@@ -1,0 +1,2 @@
+echo "🔍 Checking for build errors..."
+pnpm run build
