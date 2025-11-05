@@ -17,6 +17,12 @@ export default defineConfig({
         'src/prompts/**/*.ts', // Heavily dependent on inquirer library
         'src/index.ts', // Main entry point with CLI orchestration
       ],
+      thresholds: {
+        lines: 80,
+        statements: 80,
+        branches: 70,
+        functions: 80,
+      },
     },
   },
 });

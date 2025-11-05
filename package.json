@@ -18,6 +18,9 @@
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.20.0",
+  "engines": {
+    "node": ">=22"
+  },
   "devDependencies": {
     "@vitest/coverage-v8": "^4.0.7",
     "@types/inquirer": "^9.0.9",
