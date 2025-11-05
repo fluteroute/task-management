@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { getBillingPeriod, calculateDueDate } from './billing.js';
-import * as configModule from './config.js';
+import * as configModule from '../config/config.js';
 
 describe('Billing Period Calculations', () => {
   beforeEach(() => {

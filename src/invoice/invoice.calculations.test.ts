@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import type { TaskEntry } from './types/index.js';
-import * as billingModule from './billing.js';
+import type { TaskEntry } from '../types/index.js';
+import * as billingModule from '../billing/billing.js';
 
 // Mock billing module
-vi.mock('./billing.js', () => ({
+vi.mock('../billing/billing.js', () => ({
   getBillingPeriod: vi.fn(),
   calculateDueDate: vi.fn(),
 }));

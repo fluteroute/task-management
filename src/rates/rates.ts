@@ -1,4 +1,4 @@
-import { getClients, getDefaultRate } from './config.js';
+import { getClients, getDefaultRate } from '../config/config.js';
 
 /**
  * Get rate for a client

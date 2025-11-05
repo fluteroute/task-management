@@ -1,6 +1,6 @@
 import { promises as fs } from 'node:fs';
 import { join } from 'node:path';
-import type { TaskEntry } from './types/index.js';
+import type { TaskEntry } from '../types/index.js';
 
 const DATA_DIR = 'data';
 const DATA_FILE = 'tasks.json';

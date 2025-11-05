@@ -1,4 +1,4 @@
-import { getInvoiceDates, getPaymentTerms } from './config.js';
+import { getInvoiceDates, getPaymentTerms } from '../config/config.js';
 
 /**
  * Get billing period for a given date based on configured invoice dates

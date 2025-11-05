@@ -1,9 +1,9 @@
 import chalk from 'chalk';
 import Table from 'cli-table3';
-import type { TaskEntry } from './types/index.js';
-import { loadTasks } from './storage.js';
-import { getHourLimitForClient } from './rates.js';
-import { getBillingPeriod } from './billing.js';
+import type { TaskEntry } from '../types/index.js';
+import { loadTasks } from '../storage/storage.js';
+import { getHourLimitForClient } from '../rates/rates.js';
+import { getBillingPeriod } from '../billing/billing.js';
 
 /**
  * Group tasks by client and billing period

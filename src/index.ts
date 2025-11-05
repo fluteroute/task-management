@@ -2,12 +2,12 @@
 
 import chalk from 'chalk';
 import { collectTaskInfo, displayTaskSummary, promptMainMenu, promptSelectClient, promptSelectBillingPeriod, promptSelectClientForInvoice } from './prompts/index.js';
-import { addTask } from './storage.js';
-import { getRateForClient } from './rates.js';
+import { addTask } from './storage/storage.js';
+import { getRateForClient } from './rates/rates.js';
 import type { TaskEntry } from './types/index.js';
-import { displayTasksByClient, getClientsFromTasks, getBillingPeriodsForClient } from './view.js';
-import { displayInvoice, getBillingPeriodsForClientPrompt } from './invoice.js';
-import { loadTasks } from './storage.js';
+import { displayTasksByClient, getClientsFromTasks, getBillingPeriodsForClient } from './view/view.js';
+import { displayInvoice, getBillingPeriodsForClientPrompt } from './invoice/invoice.js';
+import { loadTasks } from './storage/storage.js';
 import { randomUUID } from 'node:crypto';
 
 /**

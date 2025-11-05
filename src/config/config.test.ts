@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { promises as fs } from 'node:fs';
-import type { AppConfig } from './config.js';
+import type { AppConfig } from './config.ts';
 
 // Mock fs module
 vi.mock('node:fs', () => ({
@@ -11,7 +11,7 @@ vi.mock('node:fs', () => ({
 }));
 
 describe('Config Module', () => {
-  let configModule: Awaited<typeof import('./config.js')>;
+  let configModule: Awaited<typeof import('./config.ts')>;
   let consoleWarnSpy: any;
 
   beforeEach(async () => {

@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { promises as fs } from 'node:fs';
 import { join } from 'node:path';
 import * as storageModule from './storage.js';
-import type { TaskEntry } from './types/index.js';
+import type { TaskEntry } from '../types/index.js';
 
 // Mock fs module
 vi.mock('node:fs', () => ({

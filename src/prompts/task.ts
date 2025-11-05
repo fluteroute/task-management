@@ -1,8 +1,8 @@
 import chalk from 'chalk';
-import { getAvailableClients } from '../rates.js';
+import { getAvailableClients } from '../rates/rates.js';
 import type { TaskInput } from '../types/index.js';
 import { promptSelectOrCustom, promptOptionalString, promptNumber } from './utils.js';
-import { getActivityTypes } from '../config.js';
+import { getActivityTypes } from '../config/config.js';
 
 /**
  * Collect all task information from user

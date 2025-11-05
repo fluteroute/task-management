@@ -1,5 +1,5 @@
 import { promises as fs } from 'node:fs';
-import type { ClientRate } from './types/index.js';
+import type { ClientRate } from '../types/index.js';
 
 /**
  * Configuration file path

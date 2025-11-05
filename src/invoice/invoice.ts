@@ -1,8 +1,8 @@
 import chalk from 'chalk';
 import Table from 'cli-table3';
-import type { TaskEntry } from './types/index.js';
-import { loadTasks } from './storage.js';
-import { getBillingPeriod, calculateDueDate } from './billing.js';
+import type { TaskEntry } from '../types/index.js';
+import { loadTasks } from '../storage/storage.js';
+import { getBillingPeriod, calculateDueDate } from '../billing/billing.js';
 
 /**
  * Format date for display
