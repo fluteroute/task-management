@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { promises as fs } from 'node:fs';
+import type { AppConfig } from './config.js';
 
 // Mock fs module
 vi.mock('node:fs', () => ({
@@ -11,7 +12,7 @@ vi.mock('node:fs', () => ({
 
 describe('Config Module', () => {
   let configModule: Awaited<typeof import('./config.js')>;
-  let consoleWarnSpy: ReturnType<typeof vi.spyOn>;
+  let consoleWarnSpy: any;
 
   beforeEach(async () => {
     vi.clearAllMocks();
@@ -29,7 +30,7 @@ describe('Config Module', () => {
 
   describe('loadConfig', () => {
     it('should load valid config file', async () => {
-      const validConfig: configModule.AppConfig = {
+      const validConfig: AppConfig = {
         clients: [{ client: 'TestClient', rate: 100 }],
         activityTypes: ['Type1', 'Type2'],
         defaultRate: 150,
@@ -46,7 +47,7 @@ describe('Config Module', () => {
     });
 
     it('should use cached config on subsequent calls', async () => {
-      const validConfig: configModule.AppConfig = {
+      const validConfig: AppConfig = {
         clients: [],
         activityTypes: ['Type1'],
         defaultRate: 100,
@@ -65,7 +66,7 @@ describe('Config Module', () => {
     });
 
     it('should use defaults when config file is missing and example file exists', async () => {
-      const exampleConfig: configModule.AppConfig = {
+      const exampleConfig: AppConfig = {
         clients: [{ client: 'Example', rate: 120 }],
         activityTypes: ['ExampleType'],
         defaultRate: 120,
@@ -244,7 +245,7 @@ describe('Config Module', () => {
 
   describe('getClients', () => {
     it('should return clients from config', async () => {
-      const config: configModule.AppConfig = {
+      const config: AppConfig = {
         clients: [
           { client: 'Client1', rate: 100 },
           { client: 'Client2', rate: 150, hourLimit: 40 },
@@ -265,7 +266,7 @@ describe('Config Module', () => {
 
   describe('getActivityTypes', () => {
     it('should return activity types from config', async () => {
-      const config: configModule.AppConfig = {
+      const config: AppConfig = {
         clients: [],
         activityTypes: ['Type1', 'Type2', 'Type3'],
         defaultRate: 100,
@@ -283,7 +284,7 @@ describe('Config Module', () => {
 
   describe('getDefaultRate', () => {
     it('should return default rate from config', async () => {
-      const config: configModule.AppConfig = {
+      const config: AppConfig = {
         clients: [],
         activityTypes: [],
         defaultRate: 150,
@@ -301,7 +302,7 @@ describe('Config Module', () => {
 
   describe('getInvoiceDates', () => {
     it('should return invoice dates from config', async () => {
-      const config: configModule.AppConfig = {
+      const config: AppConfig = {
         clients: [],
         activityTypes: [],
         defaultRate: 100,
@@ -319,7 +320,7 @@ describe('Config Module', () => {
 
   describe('getPaymentTerms', () => {
     it('should return payment terms from config', async () => {
-      const config: configModule.AppConfig = {
+      const config: AppConfig = {
         clients: [],
         activityTypes: [],
         defaultRate: 100,
