@@ -1,0 +1,24 @@
+{
+  "clients": [
+    {
+      "client": "Example Client 1",
+      "rate": 100,
+      "hourLimit": 40
+    },
+    {
+      "client": "Example Client 2",
+      "rate": 150,
+      "hourLimit": 20
+    }
+  ],
+  "activityTypes": [
+    "Code Review",
+    "Implementation",
+    "Meetings/Syncs",
+    "Planning"
+  ],
+  "defaultRate": 100,
+  "invoiceDates": [1, 15],
+  "paymentTerms": 15
+}
+
