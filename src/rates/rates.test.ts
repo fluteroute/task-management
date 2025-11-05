@@ -1,7 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { getRateForClient, getHourLimitForClient, getAvailableClients } from './rates.js';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as configModule from '../config/config.js';
 import type { ClientRate } from '../types/index.js';
+import { getAvailableClients, getHourLimitForClient, getRateForClient } from './rates.js';
 
 describe('Rate Calculations', () => {
   beforeEach(() => {
@@ -120,4 +120,3 @@ describe('Rate Calculations', () => {
     });
   });
 });
-

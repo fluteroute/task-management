@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { getBillingPeriod, calculateDueDate } from './billing.js';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as configModule from '../config/config.js';
+import { calculateDueDate, getBillingPeriod } from './billing.js';
 
 describe('Billing Period Calculations', () => {
   beforeEach(() => {
@@ -12,7 +12,7 @@ describe('Billing Period Calculations', () => {
       vi.spyOn(configModule, 'getInvoiceDates').mockResolvedValue([1, 15]);
 
       const result = await getBillingPeriod('2024-01-05');
-      
+
       expect(result.billingDate).toBe('2024-01-15');
       expect(result.periodLabel).toContain('January 1-14');
       expect(result.periodLabel).toContain('Billed: January 15');
@@ -22,7 +22,7 @@ describe('Billing Period Calculations', () => {
       vi.spyOn(configModule, 'getInvoiceDates').mockResolvedValue([1, 15]);
 
       const result = await getBillingPeriod('2024-01-20');
-      
+
       expect(result.billingDate).toBe('2024-02-01');
       expect(result.periodLabel).toContain('January 15-31');
       expect(result.periodLabel).toContain('Billed: February 1');
@@ -32,7 +32,7 @@ describe('Billing Period Calculations', () => {
       vi.spyOn(configModule, 'getInvoiceDates').mockResolvedValue([1, 15]);
 
       const result = await getBillingPeriod('2024-01-15');
-      
+
       expect(result.billingDate).toBe('2024-02-01');
       expect(result.periodLabel).toContain('January 15-31');
     });
@@ -41,7 +41,7 @@ describe('Billing Period Calculations', () => {
       vi.spyOn(configModule, 'getInvoiceDates').mockResolvedValue([1, 15]);
 
       const result = await getBillingPeriod('2024-01-01');
-      
+
       expect(result.billingDate).toBe('2024-01-15');
       expect(result.periodLabel).toContain('January 1-14');
     });
@@ -50,7 +50,7 @@ describe('Billing Period Calculations', () => {
       vi.spyOn(configModule, 'getInvoiceDates').mockResolvedValue([1, 15]);
 
       const result = await getBillingPeriod('2024-01-31');
-      
+
       expect(result.billingDate).toBe('2024-02-01');
       expect(result.periodLabel).toContain('January 15-31');
     });
@@ -59,7 +59,7 @@ describe('Billing Period Calculations', () => {
       vi.spyOn(configModule, 'getInvoiceDates').mockResolvedValue([1, 15]);
 
       const result = await getBillingPeriod('2024-12-20');
-      
+
       expect(result.billingDate).toBe('2025-01-01');
       expect(result.periodLabel).toContain('December 15-31');
       expect(result.periodLabel).toContain('Billed: January 1');
@@ -69,7 +69,7 @@ describe('Billing Period Calculations', () => {
       vi.spyOn(configModule, 'getInvoiceDates').mockResolvedValue([1]);
 
       const result = await getBillingPeriod('2024-01-15');
-      
+
       expect(result.billingDate).toBe('2024-02-01');
       expect(result.periodLabel).toContain('January 1-31');
       expect(result.periodLabel).toContain('Billed: February 1');
@@ -98,7 +98,7 @@ describe('Billing Period Calculations', () => {
       vi.spyOn(configModule, 'getInvoiceDates').mockResolvedValue([15, 1]);
 
       const result = await getBillingPeriod('2024-01-05');
-      
+
       expect(result.billingDate).toBe('2024-01-15');
       expect(result.periodLabel).toContain('January 1-14');
     });
@@ -107,7 +107,7 @@ describe('Billing Period Calculations', () => {
       vi.spyOn(configModule, 'getInvoiceDates').mockResolvedValue([1, 15]);
 
       const result = await getBillingPeriod('2024-02-20');
-      
+
       expect(result.billingDate).toBe('2024-03-01');
       expect(result.periodLabel).toContain('February 15-29'); // 2024 is a leap year
     });
@@ -171,7 +171,7 @@ describe('Billing Period Calculations', () => {
       vi.spyOn(configModule, 'getPaymentTerms').mockResolvedValue(15);
 
       const result = await calculateDueDate('2024-01-01');
-      
+
       expect(result).toBe('2024-01-16');
     });
 
@@ -179,7 +179,7 @@ describe('Billing Period Calculations', () => {
       vi.spyOn(configModule, 'getPaymentTerms').mockResolvedValue(30);
 
       const result = await calculateDueDate('2024-01-01');
-      
+
       expect(result).toBe('2024-01-31');
     });
 
@@ -187,7 +187,7 @@ describe('Billing Period Calculations', () => {
       vi.spyOn(configModule, 'getPaymentTerms').mockResolvedValue(90);
 
       const result = await calculateDueDate('2024-01-01');
-      
+
       expect(result).toBe('2024-03-31');
     });
 
@@ -195,7 +195,7 @@ describe('Billing Period Calculations', () => {
       vi.spyOn(configModule, 'getPaymentTerms').mockResolvedValue(15);
 
       const result = await calculateDueDate('2024-01-20');
-      
+
       expect(result).toBe('2024-02-04');
     });
 
@@ -203,7 +203,7 @@ describe('Billing Period Calculations', () => {
       vi.spyOn(configModule, 'getPaymentTerms').mockResolvedValue(15);
 
       const result = await calculateDueDate('2024-12-20');
-      
+
       expect(result).toBe('2025-01-04');
     });
 
@@ -211,7 +211,7 @@ describe('Billing Period Calculations', () => {
       vi.spyOn(configModule, 'getPaymentTerms').mockResolvedValue(45);
 
       const result = await calculateDueDate('2024-01-15');
-      
+
       expect(result).toBe('2024-02-29'); // 2024 is a leap year
     });
 
@@ -219,7 +219,7 @@ describe('Billing Period Calculations', () => {
       vi.spyOn(configModule, 'getPaymentTerms').mockResolvedValue(30);
 
       const result = await calculateDueDate('2024-02-01');
-      
+
       expect(result).toBe('2024-03-02'); // Leap year, Feb has 29 days
     });
 
@@ -227,9 +227,8 @@ describe('Billing Period Calculations', () => {
       vi.spyOn(configModule, 'getPaymentTerms').mockResolvedValue(15);
 
       const result = await calculateDueDate('2024-01-15');
-      
+
       expect(result).toBe('2024-01-30');
     });
   });
 });
-

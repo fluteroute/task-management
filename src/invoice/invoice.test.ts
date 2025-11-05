@@ -1,8 +1,8 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import type { TaskEntry } from '../types/index.js';
-import { getClientsFromTasks, getBillingPeriodsForClientPrompt } from './invoice.js';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as billingModule from '../billing/billing.js';
 import * as storageModule from '../storage/storage.js';
+import type { TaskEntry } from '../types/index.js';
+import { getBillingPeriodsForClientPrompt, getClientsFromTasks } from './invoice.js';
 
 // Mock modules
 vi.mock('../billing/billing.js', () => ({
@@ -146,8 +146,10 @@ describe('Invoice Module', () => {
         },
       ];
 
-      vi.mocked(billingModule.getBillingPeriod)
-        .mockResolvedValue({ billingDate: '2024-01-15', periodLabel: 'Period 1' });
+      vi.mocked(billingModule.getBillingPeriod).mockResolvedValue({
+        billingDate: '2024-01-15',
+        periodLabel: 'Period 1',
+      });
 
       const result = await getBillingPeriodsForClientPrompt(tasks, 'ClientA');
 
@@ -210,8 +212,10 @@ describe('Invoice Module', () => {
       ];
 
       vi.mocked(storageModule.loadTasks).mockResolvedValue(tasks);
-      vi.mocked(billingModule.getBillingPeriod)
-        .mockResolvedValue({ billingDate: '2024-01-15', periodLabel: 'Period 1' });
+      vi.mocked(billingModule.getBillingPeriod).mockResolvedValue({
+        billingDate: '2024-01-15',
+        periodLabel: 'Period 1',
+      });
       vi.mocked(billingModule.calculateDueDate).mockResolvedValue('2024-01-30');
 
       // We can't easily test displayInvoice directly since it uses console.log
@@ -308,4 +312,3 @@ describe('Invoice Module', () => {
     });
   });
 });
-

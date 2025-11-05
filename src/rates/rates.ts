@@ -8,14 +8,12 @@ export async function getRateForClient(client: string, defaultRate?: number): Pr
   // Trim whitespace from client name for comparison
   const trimmedClient = client.trim();
   const clients = await getClients();
-  const clientRate = clients.find(
-    (cr) => cr.client.toLowerCase() === trimmedClient.toLowerCase()
-  );
-  
+  const clientRate = clients.find((cr) => cr.client.toLowerCase() === trimmedClient.toLowerCase());
+
   if (clientRate) {
     return clientRate.rate;
   }
-  
+
   // If not found, return default rate (from config or provided)
   if (defaultRate !== undefined) {
     return defaultRate;
@@ -39,10 +37,7 @@ export async function getHourLimitForClient(client: string): Promise<number | un
   // Trim whitespace from client name for comparison
   const trimmedClient = client.trim();
   const clients = await getClients();
-  const clientRate = clients.find(
-    (cr) => cr.client.toLowerCase() === trimmedClient.toLowerCase()
-  );
-  
+  const clientRate = clients.find((cr) => cr.client.toLowerCase() === trimmedClient.toLowerCase());
+
   return clientRate?.hourLimit;
 }
-

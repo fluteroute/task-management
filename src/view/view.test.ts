@@ -1,7 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import type { TaskEntry } from '../types/index.js';
-import { getClientsFromTasks, getBillingPeriodsForClient } from './view.js';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as billingModule from '../billing/billing.js';
+import type { TaskEntry } from '../types/index.js';
+import { getBillingPeriodsForClient, getClientsFromTasks } from './view.js';
 
 // Mock billing module
 vi.mock('../billing/billing.js', () => ({
@@ -315,8 +315,10 @@ describe('View Module', () => {
         },
       ];
 
-      vi.mocked(billingModule.getBillingPeriod)
-        .mockResolvedValue({ billingDate: '2024-01-15', periodLabel: 'Period 1' });
+      vi.mocked(billingModule.getBillingPeriod).mockResolvedValue({
+        billingDate: '2024-01-15',
+        periodLabel: 'Period 1',
+      });
 
       const result = await getBillingPeriodsForClient(tasks, 'ClientA');
 
@@ -324,4 +326,3 @@ describe('View Module', () => {
     });
   });
 });
-

@@ -1,5 +1,5 @@
-import * as readline from 'node:readline/promises';
 import { stdin, stdout } from 'node:process';
+import * as readline from 'node:readline/promises';
 import chalk from 'chalk';
 import inquirer from 'inquirer';
 
@@ -55,7 +55,7 @@ export async function promptNumber(question: string, required: boolean = true): 
           return true;
         }
         const num = parseFloat(value);
-        if (isNaN(num)) {
+        if (Number.isNaN(num)) {
           return 'Please enter a valid number.';
         }
         if (num <= 0) {
@@ -65,7 +65,7 @@ export async function promptNumber(question: string, required: boolean = true): 
       },
       filter: (value: string) => {
         const num = parseFloat(value);
-        return isNaN(num) ? (required ? 0 : undefined) : num;
+        return Number.isNaN(num) ? (required ? 0 : undefined) : num;
       },
     },
   ]);
@@ -104,7 +104,6 @@ export async function promptOptionalString(question: string): Promise<string | u
   const trimmed = result.value.trim();
   return trimmed || undefined;
 }
-
 
 /**
  * Prompt user to select from a list of options (no custom value)
@@ -146,7 +145,6 @@ export async function promptSelect(
 
   return result.value;
 }
-
 
 /**
  * Prompt user to select from a list of options or enter custom value
@@ -210,4 +208,3 @@ export async function promptSelectOrCustom(
 
   return result.value;
 }
-

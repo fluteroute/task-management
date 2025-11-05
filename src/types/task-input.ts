@@ -7,4 +7,3 @@ export interface TaskInput {
   hoursWorked: number;
   client: string;
 }
-

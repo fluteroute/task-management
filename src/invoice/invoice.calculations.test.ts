@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import type { TaskEntry } from '../types/index.js';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as billingModule from '../billing/billing.js';
+import type { TaskEntry } from '../types/index.js';
 
 // Mock billing module
 vi.mock('../billing/billing.js', () => ({
@@ -16,7 +16,7 @@ describe('Invoice Module - Calculations', () => {
   describe('formatDate logic', () => {
     it('should format date correctly', () => {
       const dateStr = '2024-01-15';
-      const date = new Date(dateStr + 'T00:00:00');
+      const date = new Date(`${dateStr}T00:00:00`);
       const formatted = date.toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
@@ -30,7 +30,7 @@ describe('Invoice Module - Calculations', () => {
 
     it('should handle different months correctly', () => {
       const dateStr = '2024-12-25';
-      const date = new Date(dateStr + 'T00:00:00');
+      const date = new Date(`${dateStr}T00:00:00`);
       const formatted = date.toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
@@ -44,7 +44,7 @@ describe('Invoice Module - Calculations', () => {
 
     it('should handle year boundaries correctly', () => {
       const dateStr = '2025-01-01';
-      const date = new Date(dateStr + 'T00:00:00');
+      const date = new Date(`${dateStr}T00:00:00`);
       const formatted = date.toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
@@ -83,14 +83,17 @@ describe('Invoice Module - Calculations', () => {
       ];
 
       // Simulate the merging logic
-      const tasksByKey = new Map<string, {
-        date: string;
-        activityType: string;
-        ticketNumber: string | undefined;
-        totalHours: number;
-        rate: number;
-        tasks: TaskEntry[];
-      }>();
+      const tasksByKey = new Map<
+        string,
+        {
+          date: string;
+          activityType: string;
+          ticketNumber: string | undefined;
+          totalHours: number;
+          rate: number;
+          tasks: TaskEntry[];
+        }
+      >();
 
       for (const task of tasks) {
         const ticketKey = task.ticketNumber || '';
@@ -107,7 +110,10 @@ describe('Invoice Module - Calculations', () => {
           });
         }
 
-        const group = tasksByKey.get(mergeKey)!;
+        const group = tasksByKey.get(mergeKey);
+        if (!group) {
+          throw new Error(`Expected group for key ${mergeKey}`);
+        }
         group.totalHours += task.hoursWorked;
         group.tasks.push(task);
 
@@ -117,7 +123,10 @@ describe('Invoice Module - Calculations', () => {
       }
 
       expect(tasksByKey.size).toBe(1);
-      const merged = Array.from(tasksByKey.values())[0]!;
+      const merged = Array.from(tasksByKey.values())[0];
+      if (!merged) {
+        throw new Error('Expected merged task group');
+      }
       expect(merged.totalHours).toBe(4.0); // 2.5 + 1.5
       expect(merged.tasks.length).toBe(2);
       expect(merged.date).toBe('2024-01-05'); // Earliest date
@@ -147,14 +156,17 @@ describe('Invoice Module - Calculations', () => {
         },
       ];
 
-      const tasksByKey = new Map<string, {
-        date: string;
-        activityType: string;
-        ticketNumber: string | undefined;
-        totalHours: number;
-        rate: number;
-        tasks: TaskEntry[];
-      }>();
+      const tasksByKey = new Map<
+        string,
+        {
+          date: string;
+          activityType: string;
+          ticketNumber: string | undefined;
+          totalHours: number;
+          rate: number;
+          tasks: TaskEntry[];
+        }
+      >();
 
       for (const task of tasks) {
         const ticketKey = task.ticketNumber || '';
@@ -171,7 +183,10 @@ describe('Invoice Module - Calculations', () => {
           });
         }
 
-        const group = tasksByKey.get(mergeKey)!;
+        const group = tasksByKey.get(mergeKey);
+        if (!group) {
+          throw new Error(`Expected group for key ${mergeKey}`);
+        }
         group.totalHours += task.hoursWorked;
         group.tasks.push(task);
       }
@@ -203,14 +218,17 @@ describe('Invoice Module - Calculations', () => {
         },
       ];
 
-      const tasksByKey = new Map<string, {
-        date: string;
-        activityType: string;
-        ticketNumber: string | undefined;
-        totalHours: number;
-        rate: number;
-        tasks: TaskEntry[];
-      }>();
+      const tasksByKey = new Map<
+        string,
+        {
+          date: string;
+          activityType: string;
+          ticketNumber: string | undefined;
+          totalHours: number;
+          rate: number;
+          tasks: TaskEntry[];
+        }
+      >();
 
       for (const task of tasks) {
         const ticketKey = task.ticketNumber || '';
@@ -227,7 +245,10 @@ describe('Invoice Module - Calculations', () => {
           });
         }
 
-        const group = tasksByKey.get(mergeKey)!;
+        const group = tasksByKey.get(mergeKey);
+        if (!group) {
+          throw new Error(`Expected group for key ${mergeKey}`);
+        }
         group.totalHours += task.hoursWorked;
         group.tasks.push(task);
       }
@@ -257,14 +278,17 @@ describe('Invoice Module - Calculations', () => {
         },
       ];
 
-      const tasksByKey = new Map<string, {
-        date: string;
-        activityType: string;
-        ticketNumber: string | undefined;
-        totalHours: number;
-        rate: number;
-        tasks: TaskEntry[];
-      }>();
+      const tasksByKey = new Map<
+        string,
+        {
+          date: string;
+          activityType: string;
+          ticketNumber: string | undefined;
+          totalHours: number;
+          rate: number;
+          tasks: TaskEntry[];
+        }
+      >();
 
       for (const task of tasks) {
         const ticketKey = task.ticketNumber || '';
@@ -281,13 +305,19 @@ describe('Invoice Module - Calculations', () => {
           });
         }
 
-        const group = tasksByKey.get(mergeKey)!;
+        const group = tasksByKey.get(mergeKey);
+        if (!group) {
+          throw new Error(`Expected group for key ${mergeKey}`);
+        }
         group.totalHours += task.hoursWorked;
         group.tasks.push(task);
       }
 
       expect(tasksByKey.size).toBe(1);
-      const merged = Array.from(tasksByKey.values())[0]!;
+      const merged = Array.from(tasksByKey.values())[0];
+      if (!merged) {
+        throw new Error('Expected merged task group');
+      }
       expect(merged.totalHours).toBe(4.0);
     });
 
@@ -325,14 +355,17 @@ describe('Invoice Module - Calculations', () => {
         },
       ];
 
-      const tasksByKey = new Map<string, {
-        date: string;
-        activityType: string;
-        ticketNumber: string | undefined;
-        totalHours: number;
-        rate: number;
-        tasks: TaskEntry[];
-      }>();
+      const tasksByKey = new Map<
+        string,
+        {
+          date: string;
+          activityType: string;
+          ticketNumber: string | undefined;
+          totalHours: number;
+          rate: number;
+          tasks: TaskEntry[];
+        }
+      >();
 
       for (const task of tasks) {
         const ticketKey = task.ticketNumber || '';
@@ -349,7 +382,10 @@ describe('Invoice Module - Calculations', () => {
           });
         }
 
-        const group = tasksByKey.get(mergeKey)!;
+        const group = tasksByKey.get(mergeKey);
+        if (!group) {
+          throw new Error(`Expected group for key ${mergeKey}`);
+        }
         group.totalHours += task.hoursWorked;
         group.tasks.push(task);
 
@@ -440,19 +476,27 @@ describe('Invoice Module - Calculations', () => {
           grouped.set(task.client, new Map());
         }
 
-        const clientGroup = grouped.get(task.client)!;
+        const clientGroup = grouped.get(task.client);
+        if (!clientGroup) {
+          throw new Error(`Expected client group for ${task.client}`);
+        }
         if (!clientGroup.has(billingKey)) {
           clientGroup.set(billingKey, []);
         }
 
-        clientGroup.get(billingKey)!.push(task);
+        const taskGroup = clientGroup.get(billingKey);
+        if (taskGroup) {
+          taskGroup.push(task);
+        }
       }
 
       expect(grouped.has('ClientA')).toBe(true);
-      const clientAGroup = grouped.get('ClientA')!;
+      const clientAGroup = grouped.get('ClientA');
+      if (!clientAGroup) {
+        throw new Error('Expected ClientA group');
+      }
       expect(clientAGroup.has('2024-01-15')).toBe(true);
       expect(clientAGroup.has('2024-02-01')).toBe(true);
     });
   });
 });
-

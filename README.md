@@ -6,6 +6,7 @@
 
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.6-blue?logo=typescript)
 ![Node.js](https://img.shields.io/badge/Node.js-22+-green?logo=node.js)
+![Biome](https://img.shields.io/badge/Biome-2.3.4-FF6B9D?logo=biome)
 ![License](https://img.shields.io/badge/license-ISC-lightgrey)
 
 </div>
@@ -23,6 +24,10 @@
 - [Development](#development)
   - [Setup](#-setup)
   - [Building the Project](#-building-the-project)
+  - [Testing](#-testing)
+  - [Linting & Formatting](#-linting--formatting)
+  - [Git Hooks](#-git-hooks)
+  - [CI/CD](#-cicd)
   - [Project Structure](#-project-structure)
   - [Data Format](#-data-format)
   - [Contributing](#-contributing)
@@ -212,6 +217,7 @@ pnpm install
 | `pnpm watch` | Watch for changes and rebuild automatically |
 | `pnpm clean` | Clean build artifacts |
 | `pnpm dev` | Build and run in one command |
+| `pnpm start` | Run the built application |
 
 ### 🧪 Testing
 
@@ -219,35 +225,98 @@ pnpm install
 |--------|-------------|
 | `pnpm test` | Run all tests |
 | `pnpm test:watch` | Run tests in watch mode |
-| `pnpm test:ui` | Run tests with UI |
 | `pnpm test:coverage` | Run tests with coverage report |
 
 The test suite focuses on calculation functions and config-dependent behavior, including billing period calculations with different invoice date configurations and payment terms (Net 15, Net 30, Net 90).
+
+### 🔍 Linting & Formatting
+
+This project uses [Biome](https://biomejs.dev/) for fast linting and formatting.
+
+| Command | Description |
+|--------|-------------|
+| `pnpm lint` | Check for linting issues |
+| `pnpm lint:fix` | Auto-fix linting issues |
+| `pnpm format` | Format code |
+| `pnpm format:check` | Check formatting without fixing |
+| `pnpm check` | Run both lint and format check |
+| `pnpm check:fix` | Auto-fix both lint and format issues |
+
+**Pre-commit hooks:** Linting runs automatically before commits. If linting fails, the commit will be blocked.
+
+**CI/CD:** All pull requests are automatically linted in CI.
+
+### 🔒 Git Hooks
+
+This project uses [Husky](https://typicode.github.io/husky/) for git hooks:
+
+- **pre-commit**: Runs build checks and linting before commits
+- **commit-msg**: Validates commit messages using [Conventional Commits](https://www.conventionalcommits.org/)
+
+### 🔄 CI/CD
+
+The project uses GitHub Actions for continuous integration:
+
+- **PR Title Validation**: Ensures PR titles follow semantic commit format
+- **Build**: Validates TypeScript compilation
+- **Lint**: Runs Biome linting and formatting checks
+- **Test**: Runs the test suite
+- **Test Coverage**: Generates coverage reports
+
+All checks must pass before merging pull requests.
 
 ### 📁 Project Structure
 
 ```
 task-management/
 ├── 📂 src/
-│   ├── index.ts          # Main entry point
-│   ├── config.ts         # Configuration loader
-│   ├── storage.ts        # Data persistence
-│   ├── rates.ts          # Client rate utilities
-│   ├── view.ts           # Task viewing functions
-│   ├── invoice.ts        # Invoice generation
-│   ├── 📂 types/         # Type definitions
-│   └── 📂 prompts/       # CLI prompt functions
-│       ├── index.ts
-│       ├── utils.ts
-│       ├── task.ts
-│       └── menu.ts
+│   ├── index.ts                    # Main entry point
+│   ├── 📂 billing/                 # Billing period calculations
+│   │   ├── billing.ts
+│   │   └── billing.test.ts
+│   ├── 📂 config/                  # Configuration management
+│   │   ├── config.ts
+│   │   └── config.test.ts
+│   ├── 📂 invoice/                 # Invoice generation
+│   │   ├── invoice.ts
+│   │   ├── invoice.test.ts
+│   │   └── invoice.calculations.test.ts
+│   ├── 📂 prompts/                 # CLI prompt functions
+│   │   ├── index.ts
+│   │   ├── menu.ts
+│   │   ├── task.ts
+│   │   └── utils.ts
+│   ├── 📂 rates/                   # Client rate utilities
+│   │   ├── rates.ts
+│   │   └── rates.test.ts
+│   ├── 📂 storage/                 # Data persistence
+│   │   ├── storage.ts
+│   │   └── storage.test.ts
+│   ├── 📂 types/                   # TypeScript type definitions
+│   │   ├── index.ts
+│   │   ├── client-rate.ts
+│   │   ├── task-entry.ts
+│   │   └── task-input.ts
+│   └── 📂 view/                    # Task viewing and display
+│       ├── view.ts
+│       ├── view.test.ts
+│       └── view.calculations.test.ts
 │
-├── 📂 dist/              # Compiled output
-├── 📂 data/              # Task data storage
+├── 📂 dist/                        # Compiled output (generated)
+├── 📂 data/                        # Task data storage (git-ignored)
 │   └── tasks.json
+├── 📂 .github/
+│   └── workflows/
+│       └── ci.yml                  # CI/CD pipeline
+├── 📂 .husky/                      # Git hooks
+│   ├── pre-commit                  # Pre-commit hook
+│   └── commit-msg                  # Commit message validation
 │
-├── config.json           # Your config (git-ignored)
-├── config.example.json   # Example template
+├── config.json                     # Your config (git-ignored)
+├── config.example.json             # Example config template
+├── biome.json                      # Biome linting/formatting config
+├── tsconfig.json                   # TypeScript configuration
+├── vitest.config.ts                # Vitest test configuration
 └── package.json
 ```
 
@@ -266,4 +335,31 @@ Tasks are stored in `data/tasks.json` as JSON arrays. Each task entry includes:
 
 ### 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! Please follow these guidelines:
+
+1. **Fork the repository** and create a feature branch
+2. **Follow the code style** - run `pnpm check` before committing
+3. **Write tests** for new functionality
+4. **Update documentation** as needed
+5. **Commit messages** must follow [Conventional Commits](https://www.conventionalcommits.org/) format:
+   - `feat:` for new features
+   - `fix:` for bug fixes
+   - `docs:` for documentation changes
+   - `style:` for formatting changes
+   - `refactor:` for code refactoring
+   - `test:` for test changes
+   - `chore:` for maintenance tasks
+6. **Submit a Pull Request** - all CI checks must pass
+
+**Pre-commit checks:**
+- TypeScript compilation
+- Linting and formatting (Biome)
+
+**CI checks:**
+- PR title validation
+- Build verification
+- Linting
+- Test suite execution
+- Coverage reports
+
+Please ensure all checks pass before requesting review.

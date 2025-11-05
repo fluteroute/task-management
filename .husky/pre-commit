@@ -1,2 +1,5 @@
 echo "🔍 Checking for build errors..."
 pnpm run build
+
+echo "🔍 Running linter..."
+pnpm run check

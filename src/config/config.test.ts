@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { promises as fs } from 'node:fs';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { AppConfig } from './config.ts';
 
 // Mock fs module
@@ -12,7 +12,9 @@ vi.mock('node:fs', () => ({
 
 describe('Config Module', () => {
   let configModule: Awaited<typeof import('./config.ts')>;
-  let consoleWarnSpy: any;
+  // biome-ignore lint/suspicious/noTsIgnore: TypeScript has difficulty inferring the correct type for console.warn spy
+  // @ts-ignore - TypeScript is not able to infer the type of the console.warn spy
+  let consoleWarnSpy: SpyInstance<(message?: unknown, ...optionalParams: unknown[]) => void>;
 
   beforeEach(async () => {
     vi.clearAllMocks();
@@ -90,7 +92,12 @@ describe('Config Module', () => {
       const result = await configModule.loadConfig();
 
       expect(result.clients).toEqual([]);
-      expect(result.activityTypes).toEqual(['Code Review', 'Implementation', 'Meetings/Syncs', 'Planning']);
+      expect(result.activityTypes).toEqual([
+        'Code Review',
+        'Implementation',
+        'Meetings/Syncs',
+        'Planning',
+      ]);
       expect(result.defaultRate).toBe(100);
       expect(result.invoiceDates).toEqual([1, 15]);
       expect(result.paymentTerms).toBe(15);
@@ -125,7 +132,12 @@ describe('Config Module', () => {
 
       const result = await configModule.loadConfig();
 
-      expect(result.activityTypes).toEqual(['Code Review', 'Implementation', 'Meetings/Syncs', 'Planning']);
+      expect(result.activityTypes).toEqual([
+        'Code Review',
+        'Implementation',
+        'Meetings/Syncs',
+        'Planning',
+      ]);
     });
 
     it('should use defaults for invalid defaultRate (non-number)', async () => {
@@ -336,4 +348,3 @@ describe('Config Module', () => {
     });
   });
 });
-

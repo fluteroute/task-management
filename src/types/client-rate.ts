@@ -6,4 +6,3 @@ export interface ClientRate {
   rate: number;
   hourLimit?: number; // Optional monthly/hourly limit for the client
 }
-

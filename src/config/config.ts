@@ -60,7 +60,11 @@ export async function loadConfig(): Promise<AppConfig> {
       config.defaultRate = DEFAULT_CONFIG.defaultRate;
     }
 
-    if (!config.invoiceDates || !Array.isArray(config.invoiceDates) || config.invoiceDates.length === 0) {
+    if (
+      !config.invoiceDates ||
+      !Array.isArray(config.invoiceDates) ||
+      config.invoiceDates.length === 0
+    ) {
       console.warn('Invalid invoiceDates configuration, using defaults');
       config.invoiceDates = DEFAULT_CONFIG.invoiceDates;
     }
@@ -138,4 +142,3 @@ export async function getPaymentTerms(): Promise<number> {
   const config = await loadConfig();
   return config.paymentTerms;
 }
-

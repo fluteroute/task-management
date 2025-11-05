@@ -11,14 +11,8 @@
       "hourLimit": 20
     }
   ],
-  "activityTypes": [
-    "Code Review",
-    "Implementation",
-    "Meetings/Syncs",
-    "Planning"
-  ],
+  "activityTypes": ["Code Review", "Implementation", "Meetings/Syncs", "Planning"],
   "defaultRate": 100,
   "invoiceDates": [1, 15],
   "paymentTerms": 15
 }
-

@@ -1,14 +1,24 @@
 #!/usr/bin/env node
 
-import chalk from 'chalk';
-import { collectTaskInfo, displayTaskSummary, promptMainMenu, promptSelectClient, promptSelectBillingPeriod, promptSelectClientForInvoice } from './prompts/index.js';
-import { addTask } from './storage/storage.js';
-import { getRateForClient } from './rates/rates.js';
-import type { TaskEntry } from './types/index.js';
-import { displayTasksByClient, getClientsFromTasks, getBillingPeriodsForClient } from './view/view.js';
-import { displayInvoice, getBillingPeriodsForClientPrompt } from './invoice/invoice.js';
-import { loadTasks } from './storage/storage.js';
 import { randomUUID } from 'node:crypto';
+import chalk from 'chalk';
+import { displayInvoice, getBillingPeriodsForClientPrompt } from './invoice/invoice.js';
+import {
+  collectTaskInfo,
+  displayTaskSummary,
+  promptMainMenu,
+  promptSelectBillingPeriod,
+  promptSelectClient,
+  promptSelectClientForInvoice,
+} from './prompts/index.js';
+import { getRateForClient } from './rates/rates.js';
+import { addTask, loadTasks } from './storage/storage.js';
+import type { TaskEntry } from './types/index.js';
+import {
+  displayTasksByClient,
+  getBillingPeriodsForClient,
+  getClientsFromTasks,
+} from './view/view.js';
 
 /**
  * Generate a unique ID for a task entry
@@ -33,16 +43,16 @@ function getCurrentDateTime(): { date: string; time: string } {
 async function addNewTask(): Promise<void> {
   // Collect task information from user
   const taskInput = await collectTaskInfo();
-  
+
   // Get current date and time
   const { date, time } = getCurrentDateTime();
-  
+
   // Get rate based on client
   const rate = await getRateForClient(taskInput.client);
-  
+
   // Display summary
   displayTaskSummary(taskInput, rate, date, time);
-  
+
   // Create task entry
   const taskEntry: TaskEntry = {
     id: generateTaskId(),
@@ -54,10 +64,10 @@ async function addNewTask(): Promise<void> {
     client: taskInput.client,
     rate,
   };
-  
+
   // Save to storage
   await addTask(taskEntry);
-  
+
   /* v8 ignore next -- @preserve */
   console.log(chalk.green.bold('✅ Task entry saved successfully!\n'));
 }
@@ -69,7 +79,7 @@ async function main(): Promise<void> {
   try {
     while (true) {
       const action = await promptMainMenu();
-      
+
       if (action === 'add') {
         await addNewTask();
       } else if (action === 'view') {
@@ -81,7 +91,7 @@ async function main(): Promise<void> {
         }
         const availableClients = getClientsFromTasks(tasks);
         const selectedClient = await promptSelectClient(availableClients);
-        
+
         // If a specific client is selected, prompt for billing period
         let selectedBillingPeriod: string | undefined;
         if (selectedClient !== 'all') {
@@ -90,9 +100,9 @@ async function main(): Promise<void> {
             // Only prompt if there are multiple billing periods
             const allPeriodsOption = 'All Billing Periods';
             const periodOptions = [allPeriodsOption, ...billingPeriods];
-            
+
             const selectedPeriod = await promptSelectBillingPeriod(periodOptions);
-            
+
             if (selectedPeriod !== allPeriodsOption) {
               selectedBillingPeriod = selectedPeriod;
             }
@@ -101,7 +111,7 @@ async function main(): Promise<void> {
             selectedBillingPeriod = billingPeriods[0];
           }
         }
-        
+
         await displayTasksByClient(selectedClient, selectedBillingPeriod);
       } else if (action === 'invoice') {
         const tasks = await loadTasks();
@@ -117,7 +127,9 @@ async function main(): Promise<void> {
         const billingPeriods = await getBillingPeriodsForClientPrompt(tasks, clientSelection);
         if (billingPeriods.length === 0) {
           /* v8 ignore next -- @preserve */
-          console.log(chalk.yellow(`\n⚠️  No billing periods found for client "${clientSelection}".\n`));
+          console.log(
+            chalk.yellow(`\n⚠️  No billing periods found for client "${clientSelection}".\n`)
+          );
           continue;
         }
         const selectedBillingPeriod = await promptSelectBillingPeriod(billingPeriods);

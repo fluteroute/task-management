@@ -59,4 +59,3 @@ export async function addTask(task: TaskEntry): Promise<void> {
   tasks.push(task);
   await saveTasks(tasks);
 }
-

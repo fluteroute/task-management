@@ -1,8 +1,8 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { promises as fs } from 'node:fs';
 import { join } from 'node:path';
-import * as storageModule from './storage.js';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { TaskEntry } from '../types/index.js';
+import * as storageModule from './storage.js';
 
 // Mock fs module
 vi.mock('node:fs', () => ({
@@ -243,4 +243,3 @@ describe('Storage Module', () => {
     });
   });
 });
-

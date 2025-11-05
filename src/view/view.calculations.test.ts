@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import type { TaskEntry } from '../types/index.js';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as billingModule from '../billing/billing.js';
+import type { TaskEntry } from '../types/index.js';
 
 // Mock billing module
 vi.mock('../billing/billing.js', () => ({
@@ -49,7 +49,7 @@ describe('View Module - Calculations', () => {
 
       // Calculate expected totals
       const expectedTotalHours = 2.5 + 1.5 + 3.0; // 7.0
-      const expectedTotalAmount = (2.5 * 100) + (1.5 * 100) + (3.0 * 150); // 250 + 150 + 450 = 850
+      const expectedTotalAmount = 2.5 * 100 + 1.5 * 100 + 3.0 * 150; // 250 + 150 + 450 = 850
       const expectedTaskCount = 3;
 
       // Verify the calculation logic
@@ -203,27 +203,42 @@ describe('View Module - Calculations', () => {
           grouped.set(task.client, new Map());
         }
 
-        const clientGroup = grouped.get(task.client)!;
+        const clientGroup = grouped.get(task.client);
+        if (!clientGroup) {
+          throw new Error(`Expected client group for ${task.client}`);
+        }
         if (!clientGroup.has(billingKey)) {
           clientGroup.set(billingKey, []);
         }
 
-        clientGroup.get(billingKey)!.push(task);
+        const taskGroup = clientGroup.get(billingKey);
+        if (taskGroup) {
+          taskGroup.push(task);
+        }
       }
 
       // Verify grouping
       expect(grouped.has('ClientA')).toBe(true);
       expect(grouped.has('ClientB')).toBe(true);
 
-      const clientAGroup = grouped.get('ClientA')!;
+      const clientAGroup = grouped.get('ClientA');
+      if (!clientAGroup) {
+        throw new Error('Expected ClientA group');
+      }
       expect(clientAGroup.has('2024-01-15')).toBe(true);
       expect(clientAGroup.has('2024-02-01')).toBe(true);
-      expect(clientAGroup.get('2024-01-15')!.length).toBe(1);
-      expect(clientAGroup.get('2024-02-01')!.length).toBe(1);
+      const groupA1 = clientAGroup.get('2024-01-15');
+      const groupA2 = clientAGroup.get('2024-02-01');
+      expect(groupA1?.length).toBe(1);
+      expect(groupA2?.length).toBe(1);
 
-      const clientBGroup = grouped.get('ClientB')!;
+      const clientBGroup = grouped.get('ClientB');
+      if (!clientBGroup) {
+        throw new Error('Expected ClientB group');
+      }
       expect(clientBGroup.has('2024-01-15')).toBe(true);
-      expect(clientBGroup.get('2024-01-15')!.length).toBe(1);
+      const groupB1 = clientBGroup.get('2024-01-15');
+      expect(groupB1?.length).toBe(1);
     });
 
     it('should handle multiple tasks in same billing period', async () => {
@@ -248,8 +263,10 @@ describe('View Module - Calculations', () => {
         },
       ];
 
-      vi.mocked(billingModule.getBillingPeriod)
-        .mockResolvedValue({ billingDate: '2024-01-15', periodLabel: 'Period 1' });
+      vi.mocked(billingModule.getBillingPeriod).mockResolvedValue({
+        billingDate: '2024-01-15',
+        periodLabel: 'Period 1',
+      });
 
       const grouped = new Map<string, Map<string, TaskEntry[]>>();
 
@@ -261,16 +278,26 @@ describe('View Module - Calculations', () => {
           grouped.set(task.client, new Map());
         }
 
-        const clientGroup = grouped.get(task.client)!;
+        const clientGroup = grouped.get(task.client);
+        if (!clientGroup) {
+          throw new Error(`Expected client group for ${task.client}`);
+        }
         if (!clientGroup.has(billingKey)) {
           clientGroup.set(billingKey, []);
         }
 
-        clientGroup.get(billingKey)!.push(task);
+        const taskGroup = clientGroup.get(billingKey);
+        if (taskGroup) {
+          taskGroup.push(task);
+        }
       }
 
-      const clientAGroup = grouped.get('ClientA')!;
-      expect(clientAGroup.get('2024-01-15')!.length).toBe(2);
+      const clientAGroup = grouped.get('ClientA');
+      if (!clientAGroup) {
+        throw new Error('Expected ClientA group');
+      }
+      const groupA1 = clientAGroup.get('2024-01-15');
+      expect(groupA1?.length).toBe(2);
     });
 
     it('should handle empty task array', async () => {
@@ -286,16 +313,21 @@ describe('View Module - Calculations', () => {
           grouped.set(task.client, new Map());
         }
 
-        const clientGroup = grouped.get(task.client)!;
+        const clientGroup = grouped.get(task.client);
+        if (!clientGroup) {
+          throw new Error(`Expected client group for ${task.client}`);
+        }
         if (!clientGroup.has(billingKey)) {
           clientGroup.set(billingKey, []);
         }
 
-        clientGroup.get(billingKey)!.push(task);
+        const taskGroup = clientGroup.get(billingKey);
+        if (taskGroup) {
+          taskGroup.push(task);
+        }
       }
 
       expect(grouped.size).toBe(0);
     });
   });
 });
-
