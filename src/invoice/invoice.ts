@@ -5,8 +5,20 @@ import { loadTasks } from '../storage/storage.js';
 import type { TaskEntry } from '../types/index.js';
 
 /**
- * Format date for display
+ * Format date string for human-readable display.
+ * Converts YYYY-MM-DD format to "Month Day, Year" format.
+ *
+ * @param dateStr - The date string in YYYY-MM-DD format
+ * @returns A formatted date string (e.g., "January 15, 2024")
  * @internal Only used by displayInvoice
+ * @example
+ * ```typescript
+ * const formatted = formatDate('2024-01-15');
+ * // Returns: 'January 15, 2024'
+ *
+ * const formatted2 = formatDate('2024-12-25');
+ * // Returns: 'December 25, 2024'
+ * ```
  */
 /* v8 ignore next -- @preserve */
 function formatDate(dateStr: string): string {
@@ -56,7 +68,20 @@ async function groupTasksByClientAndBillingPeriod(
 }
 
 /**
- * Get unique clients from tasks
+ * Get unique clients from tasks.
+ *
+ * @param tasks - Array of task entries
+ * @returns A sorted array of unique client names
+ * @example
+ * ```typescript
+ * const tasks = [
+ *   { client: 'Client B', ... },
+ *   { client: 'Client A', ... },
+ *   { client: 'Client B', ... }
+ * ];
+ * const clients = getClientsFromTasks(tasks);
+ * // Returns: ['Client A', 'Client B'] (sorted, unique)
+ * ```
  */
 export function getClientsFromTasks(tasks: TaskEntry[]): string[] {
   const clients = new Set<string>();
@@ -82,7 +107,34 @@ async function getBillingPeriodsForClient(tasks: TaskEntry[], client: string): P
 }
 
 /**
- * Display invoice information for a client and billing period
+ * Display invoice information for a client and billing period.
+ * Automatically merges tasks with the same activity type and ticket number.
+ *
+ * @param client - The client name to generate invoice for
+ * @param billingDate - The billing date in YYYY-MM-DD format
+ * @example
+ * ```typescript
+ * await displayInvoice('Client A', '2024-01-15');
+ * ```
+ * -- Display Output --
+ * ```bash
+ * 💰 INVOICE
+ * ============================================================
+ * Client: Client A
+ * Invoice Date: January 15, 2024
+ * Due Date: January 30, 2024
+ * Billing Period: January 1-14 (Billed: January 15)
+ * ┌──────────────┬─────────────┬──────────┬────────┬─────────┐
+ * │ Service      │ Description │ Rate     │ Hours  │ Amount  │
+ * ├──────────────┼─────────────┼──────────┼────────┼─────────┤
+ * │ Implementation│ ABC-123     │ $100.00  │ 4.00   │ $400.00 │
+ * │ Code Review  │ DEF-456      │ $100.00  │ 2.50   │ $250.00 │
+ * └──────────────┴─────────────┴──────────┴────────┴─────────┘
+ * ────────────────────────────────────────────────────────────
+ * Total Hours: 6.50
+ * Total Amount: $650.00
+ * ============================================================
+ * ```
  */
 /* v8 ignore next -- @preserve */
 export async function displayInvoice(client: string, billingDate: string): Promise<void> {
@@ -253,7 +305,21 @@ export async function displayInvoice(client: string, billingDate: string): Promi
 }
 
 /**
- * Prompt to select billing period for a client
+ * Get billing periods for a client (wrapper for prompt usage).
+ * Returns billing dates for a specific client from tasks.
+ *
+ * @param tasks - Array of all task entries
+ * @param client - The client name to filter by
+ * @returns A promise that resolves to a sorted array of billing date strings (YYYY-MM-DD format)
+ * @example
+ * ```typescript
+ * const tasks = [
+ *   { client: 'Client A', date: '2024-01-05', ... },
+ *   { client: 'Client A', date: '2024-01-20', ... }
+ * ];
+ * const periods = await getBillingPeriodsForClientPrompt(tasks, 'Client A');
+ * // Returns: ['2024-01-15', '2024-02-01']
+ * ```
  */
 export async function getBillingPeriodsForClientPrompt(
   tasks: TaskEntry[],

@@ -21,14 +21,29 @@ import {
 } from './view/view.js';
 
 /**
- * Generate a unique ID for a task entry
+ * Generate a unique ID for a task entry using UUID v4.
+ *
+ * @returns A unique identifier string
+ * @example
+ * ```typescript
+ * const id = generateTaskId();
+ * // Returns: '550e8400-e29b-41d4-a716-446655440000' (UUID v4 format)
+ * ```
  */
 function generateTaskId(): string {
   return randomUUID();
 }
 
 /**
- * Get current date and time in readable format
+ * Get current date and time in ISO format.
+ *
+ * @returns An object containing the current date (YYYY-MM-DD) and time (HH:MM:SS)
+ * @example
+ * ```typescript
+ * const { date, time } = getCurrentDateTime();
+ * // Returns: { date: '2024-01-15', time: '14:30:25' }
+ * // (based on current system date/time)
+ * ```
  */
 function getCurrentDateTime(): { date: string; time: string } {
   const now = new Date();
@@ -38,7 +53,19 @@ function getCurrentDateTime(): { date: string; time: string } {
 }
 
 /**
- * Add a new task entry
+ * Collect task information from user, calculate rate, display summary, and save to storage.
+ * Handles the complete flow of adding a new task entry.
+ *
+ * @example
+ * ```typescript
+ * await addNewTask();
+ * // 1. Prompts user for task information
+ * // 2. Gets current date/time automatically
+ * // 3. Looks up rate for the client
+ * // 4. Displays task summary
+ * // 5. Saves task to storage
+ * // Output: "✅ Task entry saved successfully!"
+ * ```
  */
 async function addNewTask(): Promise<void> {
   // Collect task information from user
@@ -72,9 +99,6 @@ async function addNewTask(): Promise<void> {
   console.log(chalk.green.bold('✅ Task entry saved successfully!\n'));
 }
 
-/**
- * Main application entry point
- */
 async function main(): Promise<void> {
   try {
     while (true) {

@@ -5,7 +5,27 @@ import type { TaskInput } from '../types/index.js';
 import { promptNumber, promptOptionalString, promptSelectOrCustom } from './utils.js';
 
 /**
- * Collect all task information from user
+ * Collect all task information from user through interactive prompts.
+ * Prompts for activity type, ticket number (optional), hours worked, and client.
+ *
+ * @returns A promise that resolves to a TaskInput object containing all collected task information
+ * @example
+ * ```typescript
+ * const taskInfo = await collectTaskInfo();
+ * ```
+ * -- Display Output --
+ * ```bash
+ * 📝 === Task Time Log Entry ===
+ * ? Select activity type: (Use arrow keys)
+ *   > Implementation
+ *     Code Review
+ *     Meetings/Syncs
+ * ? Ticket number (optional, press Enter to skip): ABC-123
+ * ? Hours worked: 2.5
+ * ? Select client: (Use arrow keys)
+ *   > Client A
+ *     Client B
+ * ```
  */
 /* v8 ignore next -- @preserve */
 export async function collectTaskInfo(): Promise<TaskInput> {
@@ -43,7 +63,34 @@ export async function collectTaskInfo(): Promise<TaskInput> {
 }
 
 /**
- * Display task summary before saving
+ * Display a formatted task summary before saving to storage.
+ *
+ * @param input - The task input data collected from the user
+ * @param rate - The hourly rate for the task
+ * @param date - The date of the task (YYYY-MM-DD format)
+ * @param time - The time of the task (HH:MM:SS format)
+ * @example
+ * ```typescript
+ * displayTaskSummary(
+ *   { activityType: 'Implementation', hoursWorked: 2.5, client: 'Client A', ticketNumber: 'ABC-123' },
+ *   100,
+ *   '2024-01-15',
+ *   '14:30:00'
+ * );
+ * ```
+ * -- Display Output --
+ * ```bash
+ * 📋 === Task Summary ===
+ * Date: 2024-01-15
+ * Time: 14:30:00
+ * Activity Type: Implementation
+ * Ticket Number: ABC-123
+ * Hours Worked: 2.5
+ * Client: Client A
+ * Rate: $100.00/hour
+ * Total: $250.00
+ * ==================
+ * ```
  */
 export function displayTaskSummary(
   input: TaskInput,

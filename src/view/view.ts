@@ -6,7 +6,11 @@ import { loadTasks } from '../storage/storage.js';
 import type { TaskEntry } from '../types/index.js';
 
 /**
- * Group tasks by client and billing period
+ * Group tasks by client and billing period.
+ * Creates a nested map structure: client -> billing date -> tasks array.
+ *
+ * @param tasks - Array of task entries to group
+ * @returns A promise that resolves to a nested map structure
  * @internal Only used by displayTasksByClient
  */
 /* v8 ignore next -- @preserve */
@@ -43,7 +47,10 @@ async function groupTasksByClientAndBillingPeriod(
 }
 
 /**
- * Calculate totals for a client
+ * Calculate totals (hours, amount, task count) for a set of tasks.
+ *
+ * @param tasks - Array of task entries to calculate totals for
+ * @returns An object containing totalHours, totalAmount, and taskCount
  * @internal Only used by displayTasksByClient
  */
 /* v8 ignore next -- @preserve */
@@ -68,7 +75,21 @@ function calculateClientTotals(tasks: TaskEntry[]): {
 }
 
 /**
- * Get unique clients from tasks
+ * Extract unique client names from an array of tasks.
+ *
+ * @param tasks - Array of task entries
+ * @returns A sorted array of unique client names
+ * @example
+ * ```typescript
+ * const tasks = [
+ *   { client: 'Client B', ... },
+ *   { client: 'Client A', ... },
+ *   { client: 'Client B', ... },
+ *   { client: 'Client C', ... }
+ * ];
+ * const clients = getClientsFromTasks(tasks);
+ * // Returns: ['Client A', 'Client B', 'Client C'] (sorted, unique)
+ * ```
  */
 export function getClientsFromTasks(tasks: TaskEntry[]): string[] {
   const clients = new Set<string>();
@@ -79,7 +100,21 @@ export function getClientsFromTasks(tasks: TaskEntry[]): string[] {
 }
 
 /**
- * Get available billing periods for a client
+ * Get all available billing periods (billing dates) for a specific client.
+ *
+ * @param tasks - Array of all task entries
+ * @param client - The client name to filter by
+ * @returns A promise that resolves to a sorted array of billing date strings (YYYY-MM-DD format)
+ * @example
+ * ```typescript
+ * const tasks = [
+ *   { client: 'Client A', date: '2024-01-05', ... },
+ *   { client: 'Client A', date: '2024-01-20', ... },
+ *   { client: 'Client B', date: '2024-01-10', ... }
+ * ];
+ * const periods = await getBillingPeriodsForClient(tasks, 'Client A');
+ * // Returns: ['2024-01-15', '2024-02-01'] (sorted billing dates for Client A)
+ * ```
  */
 export async function getBillingPeriodsForClient(
   tasks: TaskEntry[],
@@ -97,9 +132,34 @@ export async function getBillingPeriodsForClient(
 }
 
 /**
- * Display all tasks grouped by client and billing period in table format
+ * Display all tasks grouped by client and billing period in table format.
+ *
  * @param selectedClient - If provided, only show tasks for this client. If 'all', show all clients.
  * @param selectedBillingPeriod - If provided, only show tasks for this billing period (YYYY-MM-DD format)
+ * @example
+ * ```typescript
+ * // Display all tasks for all clients
+ * await displayTasksByClient('all');
+ *
+ * // Display tasks for a specific client
+ * await displayTasksByClient('Client A');
+ *
+ * // Display tasks for a specific client and billing period
+ * await displayTasksByClient('Client A', '2024-01-15');
+ *
+ * ```
+ * -- Display Output --
+ * ```bash
+ * 📊 === Tasks by Client and Billing Period ===
+ * Client: Client A
+ * Billing Period: January 1-14 (Billed: January 15)
+ * ┌────────────┬──────────┬───────────-───┬────────┬────────┬───────┬────────┐
+ * │ Date       │ Time     │ Activity      │ Ticket │ Hours  │ Rate  │ Amount │
+ * ├────────────┼──────────┼────────────-──┼────────┼────────┼───────┼────────┤
+ * │ 2024-01-05 │ 14:30:00 │ Implementation│ ABC-123│ 2.50   │ $100  │ $250.00│
+ * └────────────┴──────────┴───────────-───┴────────┴────────┴─────-─┴────────┘
+ * Period Total: 2.50 hours | $250.00
+ * ```
  */
 /* v8 ignore next -- @preserve */
 export async function displayTasksByClient(

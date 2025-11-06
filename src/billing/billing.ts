@@ -1,8 +1,25 @@
 import { getInvoiceDates, getPaymentTerms } from '../config/config.js';
 
 /**
- * Get billing period for a given date based on configured invoice dates
- * Returns an object with billing date and period description
+ * Get billing period for a given date based on configured invoice dates.
+ * Determines which billing period a date falls into and calculates the billing date and period label.
+ *
+ * @param dateStr - The date string in YYYY-MM-DD format
+ * @returns A promise that resolves to an object containing:
+ *   - billingDate: The billing date in YYYY-MM-DD format
+ *   - periodLabel: A human-readable description of the billing period
+ * @throws {Error} If no invoice dates are configured or configuration is invalid
+ * @example
+ * ```typescript
+ * // With invoice dates [1, 15]:
+ * // Date on January 5th falls into period 1-14, billed on January 15th
+ * const period1 = await getBillingPeriod('2024-01-05');
+ * // Returns: { billingDate: '2024-01-15', periodLabel: 'January 1-14 (Billed: January 15)' }
+ *
+ * // Date on January 20th falls into period 15-31, billed on February 1st
+ * const period2 = await getBillingPeriod('2024-01-20');
+ * // Returns: { billingDate: '2024-02-01', periodLabel: 'January 15-31 (Billed: February 1)' }
+ * ```
  */
 export async function getBillingPeriod(
   dateStr: string
@@ -111,7 +128,21 @@ export async function getBillingPeriod(
 }
 
 /**
- * Calculate due date based on billing date and configured payment terms
+ * Calculate due date based on billing date and configured payment terms.
+ * Adds the payment terms (in days) to the billing date to determine when payment is due.
+ *
+ * @param billingDateStr - The billing date string in YYYY-MM-DD format
+ * @returns A promise that resolves to the due date in YYYY-MM-DD format
+ * @example
+ * ```typescript
+ * // With payment terms of 15 days (Net 15):
+ * const dueDate = await calculateDueDate('2024-01-15');
+ * // Returns: '2024-01-30' (15 days after January 15th)
+ *
+ * // With payment terms of 30 days (Net 30):
+ * const dueDate2 = await calculateDueDate('2024-02-01');
+ * // Returns: '2024-03-02' (30 days after February 1st)
+ * ```
  */
 export async function calculateDueDate(billingDateStr: string): Promise<string> {
   const billingDate = new Date(`${billingDateStr}T00:00:00`);

@@ -32,7 +32,18 @@ const DEFAULT_CONFIG: AppConfig = {
 let cachedConfig: AppConfig | null = null;
 
 /**
- * Load configuration from file
+ * Load configuration from file.
+ * Returns cached config if available, otherwise loads from config.json.
+ * Falls back to config.example.json or defaults if config.json doesn't exist.
+ *
+ * @returns A promise that resolves to the application configuration
+ * @example
+ * ```typescript
+ * const config = await loadConfig();
+ * console.log(config.defaultRate); // 100
+ * console.log(config.invoiceDates); // [1, 15]
+ * console.log(config.clients); // [{ client: 'Client A', rate: 100 }, ...]
+ * ```
  */
 export async function loadConfig(): Promise<AppConfig> {
   // Return cached config if available
@@ -104,7 +115,16 @@ export async function loadConfig(): Promise<AppConfig> {
 }
 
 /**
- * Get clients from configuration
+ * Get clients from configuration.
+ *
+ * @returns A promise that resolves to an array of client rate configurations
+ * @example
+ * ```typescript
+ * const clients = await getClients();
+ * // Returns: [{ client: 'Client A', rate: 100, hourLimit: 40 }, ...]
+ * const clientA = clients.find(c => c.client === 'Client A');
+ * console.log(clientA?.rate); // 100
+ * ```
  */
 export async function getClients(): Promise<ClientRate[]> {
   const config = await loadConfig();
@@ -112,7 +132,14 @@ export async function getClients(): Promise<ClientRate[]> {
 }
 
 /**
- * Get activity types from configuration
+ * Get activity types from configuration.
+ *
+ * @returns A promise that resolves to an array of activity type strings
+ * @example
+ * ```typescript
+ * const activityTypes = await getActivityTypes();
+ * // Returns: ['Code Review', 'Implementation', 'Meetings/Syncs', 'Planning']
+ * ```
  */
 export async function getActivityTypes(): Promise<string[]> {
   const config = await loadConfig();
@@ -120,7 +147,14 @@ export async function getActivityTypes(): Promise<string[]> {
 }
 
 /**
- * Get default rate from configuration
+ * Get default rate from configuration.
+ *
+ * @returns A promise that resolves to the default hourly rate
+ * @example
+ * ```typescript
+ * const defaultRate = await getDefaultRate();
+ * // Returns: 100
+ * ```
  */
 export async function getDefaultRate(): Promise<number> {
   const config = await loadConfig();
@@ -128,7 +162,16 @@ export async function getDefaultRate(): Promise<number> {
 }
 
 /**
- * Get invoice dates from configuration
+ * Get invoice dates from configuration.
+ * These are the days of the month when invoices are generated.
+ *
+ * @returns A promise that resolves to an array of invoice dates (days of month)
+ * @example
+ * ```typescript
+ * const invoiceDates = await getInvoiceDates();
+ * // Returns: [1, 15] (invoices on 1st and 15th of each month)
+ * // Could also be: [1] (monthly) or [1, 10, 20] (three times per month)
+ * ```
  */
 export async function getInvoiceDates(): Promise<number[]> {
   const config = await loadConfig();
@@ -136,7 +179,16 @@ export async function getInvoiceDates(): Promise<number[]> {
 }
 
 /**
- * Get payment terms from configuration
+ * Get payment terms from configuration.
+ * The number of days after invoice date when payment is due.
+ *
+ * @returns A promise that resolves to the payment terms in days
+ * @example
+ * ```typescript
+ * const paymentTerms = await getPaymentTerms();
+ * // Returns: 15 (Net 15 - payment due 15 days after invoice date)
+ * // Could also be: 30 (Net 30) or 90 (Net 90)
+ * ```
  */
 export async function getPaymentTerms(): Promise<number> {
   const config = await loadConfig();

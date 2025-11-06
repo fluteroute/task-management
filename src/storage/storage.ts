@@ -6,7 +6,7 @@ const DATA_DIR = 'data';
 const DATA_FILE = 'tasks.json';
 
 /**
- * Ensure the data directory exists
+ * Ensure the data directory exists, creating it if necessary.
  */
 async function ensureDataDir(): Promise<void> {
   try {
@@ -18,14 +18,37 @@ async function ensureDataDir(): Promise<void> {
 }
 
 /**
- * Get the full path to the data file
+ * Get the full path to the tasks data file.
+ *
+ * @returns The file path as a string
  */
 function getDataFilePath(): string {
   return join(DATA_DIR, DATA_FILE);
 }
 
 /**
- * Load all tasks from storage
+ * Load all tasks from the JSON storage file.
+ *
+ * @returns A promise that resolves to an array of task entries
+ * @throws {Error} If there's an error reading the file (other than file not found)
+ * @example
+ * ```typescript
+ * const tasks = await loadTasks();
+ * // Returns: [
+ * //   {
+ * //     id: 'uuid-here',
+ * //     date: '2024-01-15',
+ * //     time: '14:30:00',
+ * //     activityType: 'Implementation',
+ * //     ticketNumber: 'ABC-123',
+ * //     hoursWorked: 2.5,
+ * //     client: 'Client A',
+ * //     rate: 100
+ * //   },
+ * //   ...
+ * // ]
+ * // Returns empty array [] if file doesn't exist yet
+ * ```
  */
 export async function loadTasks(): Promise<TaskEntry[]> {
   await ensureDataDir();
@@ -43,7 +66,25 @@ export async function loadTasks(): Promise<TaskEntry[]> {
 }
 
 /**
- * Save tasks to storage
+ * Save tasks to the JSON storage file.
+ *
+ * @param tasks - Array of task entries to save
+ * @example
+ * ```typescript
+ * const tasks = [
+ *   {
+ *     id: 'uuid-here',
+ *     date: '2024-01-15',
+ *     time: '14:30:00',
+ *     activityType: 'Implementation',
+ *     hoursWorked: 2.5,
+ *     client: 'Client A',
+ *     rate: 100
+ *   }
+ * ];
+ * await saveTasks(tasks);
+ * // Saves tasks to data/tasks.json
+ * ```
  */
 export async function saveTasks(tasks: TaskEntry[]): Promise<void> {
   await ensureDataDir();
@@ -52,7 +93,25 @@ export async function saveTasks(tasks: TaskEntry[]): Promise<void> {
 }
 
 /**
- * Add a new task entry
+ * Add a new task entry to storage.
+ * Loads existing tasks, appends the new task, and saves the updated list.
+ *
+ * @param task - The task entry to add
+ * @example
+ * ```typescript
+ * const newTask = {
+ *   id: '550e8400-e29b-41d4-a716-446655440000',
+ *   date: '2024-01-15',
+ *   time: '14:30:00',
+ *   activityType: 'Implementation',
+ *   ticketNumber: 'ABC-123',
+ *   hoursWorked: 2.5,
+ *   client: 'Client A',
+ *   rate: 100
+ * };
+ * await addTask(newTask);
+ * // Task is added to data/tasks.json
+ * ```
  */
 export async function addTask(task: TaskEntry): Promise<void> {
   const tasks = await loadTasks();
